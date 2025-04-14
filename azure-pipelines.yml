@@ -1,0 +1,30 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- group: TestingBotSecrets
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '18.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm ci
+    displayName: 'Install dependencies'
+
+  - script: |
+      npx wdio run wdio.testingbot.conf.js
+    env:
+      TESTINGBOT_KEY: $(TESTINGBOT_KEY)
+      TESTINGBOT_SECRET: $(TESTINGBOT_SECRET)
+    displayName: 'Run Appium Tests on TestingBot'
