@@ -25,6 +25,17 @@ steps:
   - script: |
       curl -I https://hub.testingbot.com/wd/hub/status
     displayName: "Check TestingBot Connectivity"
+  
+  - script: |
+     echo "TB_KEY is: $TB_KEY"
+     echo "TB_SECRET is: $TB_SECRET"
+     env | grep TB_
+  
+  - script: |
+      export TB_KEY=$(TESTINGBOT_KEY)
+      export TB_SECRET=$(TESTINGBOT_SECRET)
+      npm run test
+    displayName: "Run Appium Tests"
 
   - script: |
       npx wdio run wdio.testingbot.conf.js
