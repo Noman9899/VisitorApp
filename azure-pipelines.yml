@@ -23,6 +23,10 @@ steps:
     displayName: 'Install dependencies'
 
   - script: |
+      curl -I https://hub.testingbot.com/wd/hub/status
+    displayName: "Check TestingBot Connectivity"
+
+  - script: |
       npx wdio run wdio.testingbot.conf.js
     env:
       TESTINGBOT_KEY: $(TESTINGBOT_KEY)
