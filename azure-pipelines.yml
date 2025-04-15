@@ -10,7 +10,8 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-- group: TestingBotSecrets
+  TB_KEY: $(TESTINGBOT_KEY)
+  TB_SECRET: $(TESTINGBOT_SECRET)
 
 steps:
   - task: NodeTool@0
@@ -30,6 +31,7 @@ steps:
      echo "TB_KEY is: $TB_KEY"
      echo "TB_SECRET is: $TB_SECRET"
      env | grep TB_
+    displayName: "Check Variables Value"
   
   - script: |
       export TB_KEY=$(TESTINGBOT_KEY)
