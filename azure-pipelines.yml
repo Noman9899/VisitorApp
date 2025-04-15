@@ -9,10 +9,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-variables:
-  TB_KEY: $(TESTINGBOT_KEY)
-  TB_SECRET: $(TESTINGBOT_SECRET)
-
 steps:
   - task: NodeTool@0
     inputs:
@@ -26,22 +22,22 @@ steps:
   - script: |
       curl -I https://hub.testingbot.com/wd/hub/status
     displayName: "Check TestingBot Connectivity"
-  
-  - script: |
-     echo "TB_KEY is: $TB_KEY"
-     echo "TB_SECRET is: $TB_SECRET"
-     env | grep TB_
-    displayName: "Check Variables Value"
-  
-  - script: |
-      export TB_KEY=$(TESTINGBOT_KEY)
-      export TB_SECRET=$(TESTINGBOT_SECRET)
-      npm run test
-    displayName: "Run Appium Tests"
 
   - script: |
+      echo "TB_KEY is: $TB_KEY"
+      echo "TB_SECRET is: $TB_SECRET"
+      env | grep TB_
+    env:
+      TB_KEY: $(TESTINGBOT_KEY)
+      TB_SECRET: $(TESTINGBOT_SECRET)
+    displayName: "Check Variables Value"
+
+  - script: |
+      export TB_KEY=$TB_KEY
+      export TB_SECRET=$TB_SECRET
       npx wdio run wdio.testingbot.conf.js
     env:
-      TESTINGBOT_KEY: $(TESTINGBOT_KEY)
-      TESTINGBOT_SECRET: $(TESTINGBOT_SECRET)
+      TB_KEY: $(TESTINGBOT_KEY)
+      TB_SECRET: $(TESTINGBOT_SECRET)
     displayName: 'Run Appium Tests on TestingBot'
+
